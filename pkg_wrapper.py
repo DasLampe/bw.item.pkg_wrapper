@@ -18,8 +18,8 @@ class PkgWrapper(Item):
 
     ITEM_ATTRIBUTES = {
         'installed': True,
-        'debian': 'same_as_key',
-        'redhat': 'same_as_key',
+        'debian': '',
+        'redhat': '',
     }
 
     def __init__(self, bundle, name, attributes):
