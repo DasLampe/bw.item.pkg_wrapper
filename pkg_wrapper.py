@@ -11,7 +11,7 @@ from bundlewrap.items import Item
 
 class PkgWrapper(Item):
     """
-    A package installed by yum.
+    Install packages via apt or yum, depend on your node.os config
     """
     BUNDLE_ATTRIBUTE_NAME = "pkg"
     ITEM_TYPE_NAME = "pkg"
