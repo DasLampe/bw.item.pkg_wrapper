@@ -18,10 +18,8 @@ class PkgWrapper(Item):
 
     ITEM_ATTRIBUTES = {
         'installed': True,
-        'debian': 'unknown',
-        'redhat': 'unknown',
-        'no_debian': False,
-        'no_redhat': False,
+        'debian': 'same_as_key',
+        'redhat': 'same_as_key',
     }
 
     def __init__(self, bundle, name, attributes):
@@ -75,16 +73,16 @@ class PkgWrapper(Item):
     def _get_package_name(self):
         pkg_name = self.name
 
-        if not self.attributes.get('debian') == 'unknown':
+        if not self.attributes.get('debian') == 'same_as_key':
             pkg_name = self.attributes.get('debian')
-        if not self.attributes.get('redhat') == 'unknown':
+        if not self.attributes.get('redhat') == 'same_as_key':
             pkg_name = self.attributes.get('redhat')
 
         return pkg_name
 
     # Exists package for OS? If not we can skip
     def _can_skip(self):
-        if self.node.os in self.node.OS_FAMILY_DEBIAN and self.attributes.get('no_debian') is True:
-            return True
-        if self.node.os in self.node.OS_FAMILY_DEBIAN and self.attributes.get('no_redhat') is True:
-            return True
+        return (
+            (self.node.os in self.node.OS_FAMILY_DEBIAN and self.attributes.get('debian') is False) or
+            (self.node.os in self.node.OS_FAMILY_DEBIAN and self.attributes.get('redhat') is False)
+        )
