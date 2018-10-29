@@ -43,7 +43,13 @@ class PkgWrapper(Item):
         return [cls.ITEM_TYPE_NAME]
 
     def __repr__(self):
-        return "<Foo attribute:{}>".format(self.attributes['attribute'])
+        return "<{} name:{} installed:{} debian:{} redhat:{}>".format(
+            self.ITEM_TYPE_NAME,
+            self.name,
+            self.attributes['installed'],
+            self.attributes['debian'],
+            self.attributes['redhat'],
+        )
 
     def cdict(self):
         return {
