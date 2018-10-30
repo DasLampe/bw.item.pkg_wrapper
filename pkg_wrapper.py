@@ -29,10 +29,10 @@ class PkgWrapper(Item):
 
         if self.node.os in self.node.OS_FAMILY_DEBIAN:
             self.pkg_manager = AptPkg(bundle, pkg_name,
-                                      {'installed': self.attributes['installed']})
+                                      {'installed': self.attributes.get('installed')})
         if self.node.os in self.node.OS_FAMILY_REDHAT:
             self.pkg_manager = YumPkg(bundle, pkg_name,
-                                      {'installed': self.attributes['installled']})
+                                      {'installed': self.attributes.get('installed')})
 
     @classmethod
     def block_concurrent(cls, node_os, node_os_version):
@@ -46,9 +46,9 @@ class PkgWrapper(Item):
         return "<{} name:{} installed:{} debian:{} redhat:{}>".format(
             self.ITEM_TYPE_NAME,
             self.name,
-            self.attributes['installed'],
-            self.attributes['debian'],
-            self.attributes['redhat'],
+            self.attributes.get('installed'),
+            self.attributes.get('debian'),
+            self.attributes.get('redhat'),
         )
 
     def cdict(self):
@@ -70,7 +70,7 @@ class PkgWrapper(Item):
             self.pkg_manager._pkg_install_cache.get(self.node.name, set()).remove(self.pkg_manager.id)
         except KeyError:
             pass
-        if self.pkg_manager.attributes['installed'] is False:
+        if self.pkg_manager.attributes.get('installed') is False:
             self.pkg_manager.pkg_remove()
         else:
             self.pkg_manager.pkg_install()
