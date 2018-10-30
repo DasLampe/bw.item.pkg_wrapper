@@ -79,9 +79,9 @@ class PkgWrapper(Item):
     def _get_package_name(self):
         pkg_name = self.name
 
-        if not self.attributes.get('debian') == 'same_as_key':
+        if not self.attributes.get('debian') == '' and self.node.os in self.node.OS_FAMILY_DEBIAN:
             pkg_name = self.attributes.get('debian')
-        if not self.attributes.get('redhat') == 'same_as_key':
+        if not self.attributes.get('redhat') == '' and self.node.os in self.node.OS_FAMILY_REDHAT:
             pkg_name = self.attributes.get('redhat')
 
         return pkg_name
