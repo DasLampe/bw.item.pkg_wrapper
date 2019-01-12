@@ -18,14 +18,15 @@ class PkgWrapper(Item):
 
     ITEM_ATTRIBUTES = {
         'installed': True,
-        'debian': '',
-        'redhat': '',
+        'debian': {},
+        'redhat': {},
     }
 
     def __init__(self, bundle, name, attributes):
         super(PkgWrapper, self).__init__(bundle, name, attributes)
 
         pkg_name = self._get_package_name()
+        self._set_needs()
 
         if self.node.os in self.node.OS_FAMILY_DEBIAN:
             self.pkg_manager = AptPkg(bundle, pkg_name,
@@ -75,16 +76,28 @@ class PkgWrapper(Item):
         else:
             self.pkg_manager.pkg_install()
 
+    def _set_needs(self):
+        if isinstance(self.attributes.get(self._get_node_os_family()), dict):
+            self.needs = self.attributes.get(self._get_node_os_family(), {}).get('needs', [])
+
+
     # Get specified Package name if available
     def _get_package_name(self):
         pkg_name = self.name
+        node_os_family = self._get_node_os_family()
 
-        if not self.attributes.get('debian') == '' and self.node.os in self.node.OS_FAMILY_DEBIAN:
-            pkg_name = self.attributes.get('debian')
-        if not self.attributes.get('redhat') == '' and self.node.os in self.node.OS_FAMILY_REDHAT:
-            pkg_name = self.attributes.get('redhat')
-
+        if isinstance(self.attributes.get(node_os_family), str) and \
+                not self.attributes.get(node_os_family, '') == '':
+            pkg_name = self.attributes.get(node_os_family)
+        elif isinstance(self.attributes.get(node_os_family), dict):
+            pkg_name = self.attributes.get(node_os_family, {}).get('name', pkg_name)
         return pkg_name
+
+    def _get_node_os_family(self):
+        if self.node.os in self.node.OS_FAMILY_DEBIAN:
+            return 'debian'
+        if self.node.os in self.node.OS_FAMILY_REDHAT:
+            return 'redhat'
 
     # Exists package for OS? If not we can skip
     def _can_skip(self):
