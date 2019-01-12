@@ -40,7 +40,7 @@ class PkgWrapper(Item):
         Return a list of item types that cannot be applied in parallel
         with this item type.
         """
-        return [cls.ITEM_TYPE_NAME]
+        return [cls.ITEM_TYPE_NAME, 'pkg_apt', 'pkg_yum']
 
     def __repr__(self):
         return "<{} name:{} installed:{} debian:{} redhat:{}>".format(
